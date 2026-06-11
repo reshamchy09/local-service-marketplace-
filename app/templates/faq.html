@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .faq-container {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .faq-box {
+        background: #fff;
+        padding: 18px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .faq-box:hover {
+        transform: translateY(-2px);
+    }
+
+    .faq-question {
+        font-size: 18px;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 8px;
+    }
+
+    .faq-answer {
+        font-size: 15px;
+        color: #555;
+        display: none;
+        margin-top: 10px;
+    }
+
+    .faq-box.active .faq-answer {
+        display: block;
+    }
+</style>
+
+<div class="faq-container">
+
+    <h1>Frequently Asked Questions</h1>
+
+    {% for faq in faqs %}
+        <div class="faq-box" onclick="this.classList.toggle('active')">
+            <div class="faq-question">{{ faq.question }}</div>
+            <div class="faq-answer">{{ faq.answer }}</div>
+        </div>
+    {% empty %}
+        <p>No FAQs available.</p>
+    {% endfor %}
+
+</div>
+
+<script>
+    // Optional: smooth toggle behavior already handled by class
+</script>
+
+{% endblock %}

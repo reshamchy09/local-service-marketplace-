@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mero Service{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Modern Font Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Branding & Design Variables */
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-dark: #0f172a;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius: 8px;
+            --transition: all 0.25s ease-in-out;
+            --max-width: 1200px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR LAYOUT */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0 20px;
+        }
+
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+            z-index: 1100;
+        }
+
+        /* Right-Aligned Links Menu */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav-menu a:hover {
+            color: var(--text-main);
+            background-color: var(--bg-main);
+        }
+
+        /* Buttons Treatments */
+        .nav-menu .btn-outline {
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .nav-menu .btn-outline:hover {
+            background-color: var(--bg-main);
+            border-color: var(--text-muted);
+        }
+
+        .nav-menu .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff !important;
+        }
+
+        .nav-menu .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* THREE-LINE HAMBURGER BUTTON */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1100;
+            padding: 0;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* MAIN WRAPPER */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* EXPANDED MULTI-COLUMN FOOTER */
+        .site-footer {
+            background-color: var(--bg-dark);
+            color: #f1f5f9;
+            padding: 60px 20px 20px 20px;
+            margin-top: auto;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-grid {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr repeat(2, 1fr) 1.5fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .footer-column h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .footer-column p {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+            padding-left: 4px;
+        }
+
+        /* Newsletter Input Form Minimal Layout */
+        .newsletter-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .newsletter-input {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            color: #ffffff;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+        }
+
+        .newsletter-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .newsletter-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .footer-bottom {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #64748b;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        /* RESPONSIVE MEDIA QUERIES (TABLETS & MOBILE) */
+        @media (max-width: 992px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex; /* Show 3-line panel handle */
+            }
+
+            /* Turn nav menu into a mobile slider layer */
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background-color: var(--bg-card);
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+                flex-direction: column;
+                align-items: stretch;
+                padding: 100px 24px 40px 24px;
+                gap: 12px;
+                transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            /* Activated slider position trigger via class switch */
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-menu a {
+                font-size: 16px;
+                padding: 12px 16px; /* Optimized touch target dimensions */
+                width: 100%;
+                display: block;
+            }
+
+            .nav-menu .btn-outline, .nav-menu .btn-primary {
+                text-align: center;
+                margin-top: 8px;
+            }
+
+            /* Hamburger animation mechanics toggle when active */
+            .hamburger.active span:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.active span:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION HEADER -->
+<header class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'home' %}" class="logo">Mero Service</a>
+
+        <!-- Trigger Button -->
+        <button class="hamburger" id="mobile-menu-toggle" aria-label="Toggle navigation Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Dynamic Menu List -->
+        <div class="nav-menu" id="nav-menu-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'faq' %}">FAQ</a>
+
+            <a href="{% url 'become_provider' %}">Become Provider</a>
+            <a href="{% url 'become_dealer' %}">Become Dealer</a>
+
+            {% if user.is_authenticated %}
+                <a href="#" class="btn-outline">Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn-primary">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-outline">Login</a>
+                <a href="{% url 'login' %}" class="btn-primary">Signup</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- MAIN RENDER ROOT -->
+<main class="main-content">
+    {% block content %}
+    <!-- Your individual page layout elements insert safely directly here -->
+    {% endblock %}
+</main>
+
+<!-- PRODUCTION FOOTER SYSTEM -->
+<footer class="site-footer">
+    <div class="footer-grid">
+        <div class="footer-column">
+            <h3 style="color: var(--primary);">Mero Service</h3>
+            <p style="margin-top: 10px;">Connecting top-tier local service professionals with homeowners and businesses instantly. Safe, verified, and transparent operations.</p>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Company</h3>
+            <ul class="footer-links">
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="{% url 'contact' %}">Contact Support</a></li>
+                <li><a href="{% url 'faq' %}">Help &amp; FAQ</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Partnerships</h3>
+            <ul class="footer-links">
+                <li><a href="{% url 'become_provider' %}">Join as Provider</a></li>
+                <li><a href="{% url 'become_dealer' %}">Join as Dealer</a></li>
+                <li><a href="#">Success Stories</a></li>
+                <li><a href="#">Affiliate Terms</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>Stay Updated</h3>
+            <p>Subscribe to secure local marketplace deals and trend reports.</p>
+            <form class="newsletter-form" onsubmit="event.preventDefault();">
+                <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                <button type="submit" class="newsletter-btn">Join</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div>
+            &copy; 2026 Mero Service. All Rights Reserved.
+        </div>
+        <div style="display: flex; gap: 20px;">
+            <a href="#" style="color: #64748b; text-decoration: none;">Privacy Policy</a>
+            <a href="#" style="color: #64748b; text-decoration: none;">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+
+<!-- VANILLA INTERACTION JAVASCRIPT ANIMATOR -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('mobile-menu-toggle');
+        const navMenu = document.getElementById('nav-menu-links');
+
+        toggleBtn.addEventListener('click', () => {
+            // Smooth toggle interaction classes across selectors
+            toggleBtn.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Auto-collapse drawer framework when clicking outside area panels
+        document.addEventListener('click', (event) => {
+            if (!navMenu.contains(event.target) && !toggleBtn.contains(event.target) && navMenu.classList.contains('active')) {
+                toggleBtn.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

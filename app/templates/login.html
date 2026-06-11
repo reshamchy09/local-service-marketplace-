@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="max-width:420px; margin:60px auto; background:white; padding:25px; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.1);">
+
+    <h2 style="text-align:center; margin-bottom:20px;">Login</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <input type="email" name="email" placeholder="Email" required
+            style="width:100%; padding:12px; margin-bottom:12px; border:1px solid #ddd; border-radius:8px;">
+
+        <input type="password" name="password" placeholder="Password" required
+            style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #ddd; border-radius:8px;">
+
+        <button type="submit"
+            style="width:100%; padding:12px; background:#007bff; color:white; border:none; border-radius:8px; cursor:pointer;">
+            Login
+        </button>
+    </form>
+
+    <p style="text-align:center; margin-top:15px;">
+        Don't have an account?
+        <a href="{% url 'login' %}" style="color:#007bff; text-decoration:none; font-weight:bold;">
+            Sign up
+        </a>
+    </p>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background: #f4f6f8;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1100px;
+        margin: auto;
+        padding: 25px 0;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+    }
+
+    .top {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ddd;
+    }
+
+    .name {
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    .info {
+        color: #555;
+        margin-top: 4px;
+    }
+
+    .section {
+        margin-top: 25px;
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #222;
+    }
+
+    .service-box {
+        background: #e8f1ff;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 14px;
+        background: #2c3e50;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+
+    .social a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #2c3e50;
+        font-weight: bold;
+    }
+
+    iframe {
+        width: 100%;
+        height: 300px;
+        border: 0;
+        border-radius: 10px;
+    }
+
+    /* POSTS GRID */
+    .post-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+    }
+
+    .post-card {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .post-title {
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+
+    .post-media {
+        width: 100%;
+        border-radius: 10px;
+        margin-top: 8px;
+    }
+
+    .post-desc {
+        color: #555;
+        font-size: 14px;
+    }
+
+    .tag {
+        font-size: 12px;
+        color: gray;
+    }
+
+</style>
+
+<div class="container">
+
+    <!-- PROFILE CARD -->
+    <div class="card">
+
+        <div class="top">
+
+            {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}" class="img">
+            {% else %}
+                <img src="https://via.placeholder.com/120" class="img">
+            {% endif %}
+
+            <div>
+                <div class="name">{{ profile.business_name }}</div>
+
+                <div class="info">👤 {{ profile.full_name }}</div>
+                <div class="info">📍 {{ profile.location }}</div>
+                <div class="info">📞 {{ profile.phone }}</div>
+                <div class="info">⭐ {{ profile.average_rating }} ({{ profile.review_count }})</div>
+                <div class="info">💰 Hourly: {{ profile.hourly_rate }}</div>
+            </div>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="section">
+            <div class="title">Description</div>
+            <div class="info">{{ profile.description }}</div>
+        </div>
+
+        <!-- SERVICES -->
+        <div class="section">
+            <div class="title">Services</div>
+
+            {% for s in services %}
+                <div class="service-box">
+                    🔧 {{ s.service_name }} - Rs {{ s.rate }}
+                </div>
+            {% empty %}
+                <div class="info">No services available</div>
+            {% endfor %}
+        </div>
+
+        <!-- SOCIAL -->
+        <div class="section">
+            <div class="title">Social Links</div>
+
+            <div class="social">
+                {% if profile.website %}<a href="{{ profile.website }}">🌐 Website</a>{% endif %}
+                {% if profile.facebook %}<a href="{{ profile.facebook }}">📘 Facebook</a>{% endif %}
+                {% if profile.instagram %}<a href="{{ profile.instagram }}">📸 Instagram</a>{% endif %}
+                {% if profile.tiktok %}<a href="{{ profile.tiktok }}">🎵 TikTok</a>{% endif %}
+            </div>
+        </div>
+
+        <!-- MAP -->
+        <div class="section">
+            <div class="title">Location</div>
+
+            {% if profile.latitude and profile.longitude %}
+            <iframe src="https://www.google.com/maps?q={{ profile.latitude }},{{ profile.longitude }}&output=embed"></iframe>
+            {% else %}
+                <div class="info">Location not available</div>
+            {% endif %}
+        </div>
+
+        <!-- CALL -->
+        <a href="tel:{{ profile.phone }}" class="btn">📞 Call Now</a>
+
+    </div>
+
+    <!-- POSTS SECTION -->
+    <div class="card">
+
+        <div class="title">Latest Work</div>
+
+        {% if posts %}
+        <div class="post-grid">
+
+            {% for post in posts %}
+            <div class="post-card">
+
+                <div class="post-title">{{ post.title }}</div>
+                <div class="post-desc">{{ post.description }}</div>
+
+                <div class="tag">📍 {{ post.address }}</div>
+
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" class="post-media">
+                {% endif %}
+
+                {% if post.video %}
+                    <video controls class="post-media">
+                        <source src="{{ post.video.url }}">
+                    </video>
+                {% endif %}
+
+                <div class="tag">{{ post.created_at }}</div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+        {% else %}
+            <div class="info">No work posts available</div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

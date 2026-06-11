@@ -1,0 +1,115 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<style>
+    .container {
+        max-width: 950px;
+        margin: auto;
+        padding: 25px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .btn-add {
+        background: #28a745;
+        color: white;
+        padding: 10px 16px;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .actions {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+</style>
+
+<div class="container">
+
+    <div class="header">
+        <div class="title">My Latest Work</div>
+
+        <a href="{% url 'create_post' %}" class="btn-add">+ New Post</a>
+    </div>
+
+    {% for post in posts %}
+    <div class="card">
+
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.description }}</p>
+        <p><b>Address:</b> {{ post.address }}</p>
+
+        {% if post.image %}
+            <img src="{{ post.image.url }}" style="max-width:300px;">
+        {% endif %}
+
+        {% if post.video %}
+            <video controls style="max-width:300px;">
+                <source src="{{ post.video.url }}">
+            </video>
+        {% endif %}
+
+        <p style="font-size:12px; color:gray;">{{ post.created_at }}</p>
+
+        <div class="actions">
+
+            <a href="{% url 'edit_post' post.id %}" class="btn btn-edit">
+                Edit
+            </a>
+
+            <!-- DELETE (NO HTML PAGE) -->
+            <form method="post" action="{% url 'delete_post' post.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('Delete this post?');">
+                    Delete
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

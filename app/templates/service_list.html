@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Services</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            width: 95%;
+            margin: auto;
+            padding-top: 20px;
+            gap: 20px;
+        }
+
+        .list {
+            width: 40%;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            height: fit-content;
+        }
+
+        .detail {
+            width: 60%;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .card {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .service-box {
+            border: 1px solid #eee;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LEFT SIDE: LIST -->
+    <div class="list">
+        <h3>Service Providers</h3>
+
+        {% for s in services %}
+            <div class="card">
+                <h4>{{ s.business_name }}</h4>
+                <p>{{ s.location }}</p>
+                <p>Rs {{ s.hourly_rate }}/hour</p>
+
+                <a class="btn" href="?profile={{ s.id }}">
+                    View
+                </a>
+            </div>
+        {% empty %}
+            <p>No providers found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- RIGHT SIDE: DETAIL -->
+    <div class="detail">
+        {% if selected_profile %}
+            <h2>{{ selected_profile.business_name }}</h2>
+
+            <p><b>Phone:</b> {{ selected_profile.phone }}</p>
+            <p><b>Email:</b> {{ selected_profile.email }}</p>
+            <p><b>Location:</b> {{ selected_profile.location }}</p>
+            <p><b>Days:</b> {{ selected_profile.available_days }}</p>
+            <p><b>Time:</b> {{ selected_profile.available_time }}</p>
+            <p><b>Description:</b> {{ selected_profile.description }}</p>
+            <p><b>Rate:</b> Rs {{ selected_profile.hourly_rate }}</p>
+
+            <h3>Services</h3>
+
+            {% for service in selected_profile.services.all %}
+                <div class="service-box">
+                    {{ service.service_name }} - Rs {{ service.rate }}
+                </div>
+            {% empty %}
+                <p>No services available.</p>
+            {% endfor %}
+
+        {% else %}
+            <h3>Select a provider to view details</h3>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

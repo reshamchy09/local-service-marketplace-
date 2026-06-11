@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<h2>Provider Dashboard</h2>
+
+{% if trial_expired %}
+    <div style="color:red;">
+        ⚠ Your trial has expired. Please upgrade.
+    </div>
+{% endif %}
+
+{% if service_profile %}
+
+    {% if is_approved %}
+        <div style="color:green;">
+            ✅ Your service profile is approved
+        </div>
+    {% else %}
+        <div style="color:orange;">
+            ⏳ Your profile is pending admin approval
+        </div>
+    {% endif %}
+
+    <h3>{{ service_profile.business_name }}</h3>
+    <p>{{ service_profile.location }}</p>
+    <p>{{ service_profile.description }}</p>
+
+    <h4>Services</h4>
+    <ul>
+        {% for s in service_profile.services.all %}
+            <li>{{ s.service_name }} - Rs {{ s.rate }}</li>
+        {% endfor %}
+    </ul>
+
+{% else %}
+    <p>No service profile found. Please create one.</p>
+{% endif %}
+
+{% endblock %}

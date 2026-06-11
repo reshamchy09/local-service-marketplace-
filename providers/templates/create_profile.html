@@ -1,0 +1,598 @@
+{% extends "base/base.html" %}
+{% block title %}Create Service Profile{% endblock %}
+{% block content %}
+
+<style>
+    .sp-wrap { width: 100%; max-width: 700px; }
+
+    .sp-card {
+        background: #fff;
+        border: 1px solid #ebebf0;
+        border-radius: 14px;
+        padding: 32px;
+    }
+
+    .sp-card-title { font-size: 20px; font-weight: 600; color: #1a1a2e; margin-bottom: 4px; }
+    .sp-card-sub   { font-size: 13px; color: #9ca3af; margin-bottom: 28px; }
+
+    .sp-field { margin-bottom: 18px; }
+    .sp-field label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .sp-field input[type="text"],
+    .sp-field input[type="email"],
+    .sp-field input[type="number"],
+    .sp-field input[type="url"],
+    .sp-field input[type="tel"],
+    .sp-field select,
+    .sp-field textarea {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid #e0e0e8;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1a1a2e;
+        background: #fff;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        font-family: inherit;
+        box-sizing: border-box;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .sp-field input:focus,
+    .sp-field select:focus,
+    .sp-field textarea:focus {
+        border-color: #4F46E5;
+        box-shadow: 0 0 0 3px #eef2ff;
+    }
+
+    .sp-field textarea { resize: vertical; min-height: 90px; }
+    .sp-field .error-msg { font-size: 12px; color: #dc2626; margin-top: 5px; }
+
+    .sp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .sp-divider { height: 1px; background: #ebebf0; margin: 26px 0 22px; }
+
+    .sp-section-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .badge-opt {
+        font-size: 11px;
+        font-weight: 400;
+        color: #9ca3af;
+        background: #f5f5f8;
+        border: 1px solid #e0e0e8;
+        border-radius: 20px;
+        padding: 2px 8px;
+        margin-left: 4px;
+    }
+
+    /* Photo upload */
+    .sp-photo-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .sp-avatar-circle {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: #eef2ff;
+        color: #4F46E5;
+        font-size: 26px;
+        display: flex; align-items: center; justify-content: center;
+        border: 1px solid #e0e0e8;
+        flex-shrink: 0;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .sp-avatar-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none; }
+    .sp-upload-hint { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+    .btn-upload {
+        padding: 7px 14px;
+        border: 1px solid #e0e0e8;
+        border-radius: 8px;
+        background: #fff;
+        color: #1a1a2e;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.15s;
+        display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-upload:hover { background: #f5f5f8; }
+
+    /* Select dropdown arrow */
+    .sp-select-wrap { position: relative; }
+    .sp-select-wrap::after {
+        content: "▾";
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        color: #9ca3af;
+        pointer-events: none;
+    }
+    .sp-select-wrap select { padding-right: 32px; }
+
+    /* Social icon inputs */
+    .social-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .social-icon-wrap { position: relative; }
+    .social-icon-wrap .s-icon {
+        position: absolute; left: 11px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px; color: #9ca3af;
+        pointer-events: none;
+    }
+    .social-icon-wrap input { padding-left: 32px !important; }
+
+    /* Service rows */
+    .sp-col-heads {
+        display: grid;
+        grid-template-columns: 1fr 160px 38px;
+        gap: 10px;
+        margin-bottom: 8px;
+        padding: 0 2px;
+    }
+    .sp-col-heads span { font-size: 12px; font-weight: 500; color: #9ca3af; }
+
+    #service-container { display: flex; flex-direction: column; gap: 10px; }
+
+    .service-row {
+        display: grid;
+        grid-template-columns: 1fr 160px 38px;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .service-row input {
+        padding: 9px 12px;
+        border: 1px solid #e0e0e8;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1a1a2e;
+        width: 100%;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+    .service-row input:focus { border-color: #4F46E5; box-shadow: 0 0 0 3px #eef2ff; }
+
+    .rate-wrap { position: relative; }
+    .rate-wrap .rate-prefix {
+        position: absolute; left: 11px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px; color: #9ca3af;
+        pointer-events: none; user-select: none;
+    }
+    .rate-wrap input { padding-left: 34px; }
+
+    .btn-remove {
+        width: 38px; height: 38px;
+        border: 1px solid #e0e0e8;
+        border-radius: 8px;
+        background: #fff;
+        color: #9ca3af;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+        flex-shrink: 0;
+        font-size: 16px;
+    }
+    .btn-remove:hover { background: #fef2f2; color: #dc2626; border-color: #fca5a5; }
+
+    .btn-add-service {
+        margin-top: 12px;
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 8px 16px;
+        border: 1px dashed #c7d2fe;
+        border-radius: 8px;
+        background: transparent;
+        color: #4F46E5;
+        font-size: 13px; font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    .btn-add-service:hover { background: #eef2ff; }
+
+    /* Footer */
+    .sp-footer {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 10px;
+        margin-top: 28px; padding-top: 22px;
+        border-top: 1px solid #ebebf0;
+        flex-wrap: wrap;
+    }
+    .btn-cancel {
+        padding: 9px 20px;
+        border: 1px solid #e0e0e8;
+        border-radius: 8px;
+        background: #fff; color: #1a1a2e;
+        font-size: 14px; cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none; display: inline-block;
+    }
+    .btn-cancel:hover { background: #f5f5f8; }
+    .btn-save {
+        padding: 9px 22px;
+        border: none; border-radius: 8px;
+        background: #4F46E5; color: #fff;
+        font-size: 14px; font-weight: 600;
+        cursor: pointer; transition: opacity 0.15s;
+        display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-save:hover { opacity: 0.88; }
+
+    /* ── Location coord fields ── */
+    .coord-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 10px;
+    }
+    .coord-row input[type="number"] {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid #e0e0e8;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1a1a2e;
+        background: #f9f9fb;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
+    .coord-row input[type="number"]:focus {
+        border-color: #4F46E5;
+        box-shadow: 0 0 0 3px #eef2ff;
+        background: #fff;
+    }
+    .coord-row label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b7280;
+        margin-bottom: 6px;
+    }
+
+    .btn-pick-location {
+        display: inline-flex; align-items: center; gap: 7px;
+        padding: 8px 16px;
+        border: 1px solid #c7d2fe;
+        border-radius: 8px;
+        background: #eef2ff;
+        color: #4F46E5;
+        font-size: 13px; font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-pick-location:hover:not(:disabled) { background: #e0e7ff; border-color: #a5b4fc; }
+    .btn-pick-location:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .coord-status {
+        font-size: 12px;
+        border-radius: 20px;
+        padding: 2px 10px;
+        margin-left: 8px;
+        display: none;
+    }
+    .coord-status.success { display: inline-block; color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .coord-status.error   { display: inline-block; color: #dc2626; background: #fef2f2; border: 1px solid #fca5a5; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sp-card { padding: 24px 20px; }
+        .sp-grid2 { grid-template-columns: 1fr 1fr; gap: 12px; }
+        .social-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+        .sp-col-heads { grid-template-columns: 1fr 120px 38px; }
+        .service-row  { grid-template-columns: 1fr 120px 38px; }
+        .coord-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 520px) {
+        .sp-card { padding: 20px 16px; border-radius: 12px; }
+        .sp-card-title { font-size: 18px; }
+        .sp-grid2 { grid-template-columns: 1fr; gap: 0; }
+        .social-row { grid-template-columns: 1fr; gap: 0; }
+        .sp-col-heads { grid-template-columns: 1fr 100px 38px; }
+        .service-row  { grid-template-columns: 1fr 100px 38px; }
+        .sp-footer { justify-content: stretch; }
+        .sp-footer .btn-cancel,
+        .sp-footer .btn-save { flex: 1; justify-content: center; text-align: center; }
+        .btn-add-service { width: 100%; justify-content: center; }
+        .coord-row { grid-template-columns: 1fr; }
+        .btn-pick-location { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 380px) {
+        .sp-card { padding: 16px 12px; }
+        .sp-col-heads { grid-template-columns: 1fr 86px 34px; }
+        .service-row  { grid-template-columns: 1fr 86px 34px; }
+        .btn-remove   { width: 34px; height: 34px; }
+        .sp-grid2 { gap: 0; }
+    }
+</style>
+
+<div class="sp-wrap">
+<div class="sp-card">
+    <div class="sp-card-title">Create service profile</div>
+    <div class="sp-card-sub">Fill in your details and list the services you offer.</div>
+
+    <form method="POST" enctype="multipart/form-data" id="profileForm">
+        {% csrf_token %}
+
+        <!-- Profile photo -->
+        <div class="sp-photo-row">
+            <div class="sp-avatar-circle" id="avatarCircle" onclick="document.getElementById('photoInput').click()">
+                {% if form.instance.profile_image %}
+                    <img id="avatarPreview" src="{{ form.instance.profile_image.url }}" alt="Profile photo" style="display:block">
+                    <span id="avatarIcon" style="display:none">&#128100;</span>
+                {% else %}
+                    <img id="avatarPreview" alt="">
+                    <span id="avatarIcon">&#128100;</span>
+                {% endif %}
+            </div>
+            <div>
+                <input type="file" id="photoInput" name="profile_image" accept="image/*" style="display:none">
+                <button type="button" class="btn-upload" onclick="document.getElementById('photoInput').click()">
+                    &#8593; Upload photo
+                </button>
+                <div class="sp-upload-hint">JPG or PNG &mdash; max 2 MB</div>
+            </div>
+        </div>
+
+        <!-- Main fields (excluding social + location coords) -->
+        {% for field in form %}
+            {% if field.name != 'profile_image' and field.name != 'website' and field.name != 'facebook' and field.name != 'instagram' and field.name != 'tiktok' and field.name != 'latitude' and field.name != 'longitude' %}
+                <div class="sp-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% if field.name == 'service_type' %}
+                        <div class="sp-select-wrap">{{ field }}</div>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="error-msg">{{ field.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <div class="sp-divider"></div>
+
+        <!-- Location coordinates -->
+        <div class="sp-section-title">
+            &#128205; Location coordinates
+            <span class="badge-opt">optional</span>
+            <span class="coord-status" id="coordStatus"></span>
+        </div>
+
+        <button type="button" class="btn-pick-location" id="btnPickLocation" onclick="pickCurrentLocation()">
+            &#127919; Use current location
+        </button>
+
+        <div class="coord-row">
+            <div>
+                <label for="{{ form.latitude.id_for_label }}">Latitude</label>
+                {{ form.latitude }}
+                {% if form.latitude.errors %}<div class="error-msg">{{ form.latitude.errors.0 }}</div>{% endif %}
+            </div>
+            <div>
+                <label for="{{ form.longitude.id_for_label }}">Longitude</label>
+                {{ form.longitude }}
+                {% if form.longitude.errors %}<div class="error-msg">{{ form.longitude.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="sp-divider"></div>
+
+        <!-- Social links -->
+        <div class="sp-section-title">
+            &#127760; Social &amp; contact links
+            <span class="badge-opt">optional</span>
+        </div>
+
+        <div class="social-row">
+            <div class="sp-field">
+                <label for="{{ form.website.id_for_label }}">Website</label>
+                <div class="social-icon-wrap">
+                    <span class="s-icon">&#128279;</span>
+                    {{ form.website }}
+                </div>
+                {% if form.website.errors %}<div class="error-msg">{{ form.website.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="sp-field">
+                <label for="{{ form.facebook.id_for_label }}">Facebook</label>
+                <div class="social-icon-wrap">
+                    <span class="s-icon" style="font-weight:700;font-family:sans-serif">f</span>
+                    {{ form.facebook }}
+                </div>
+                {% if form.facebook.errors %}<div class="error-msg">{{ form.facebook.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="sp-field">
+                <label for="{{ form.instagram.id_for_label }}">Instagram</label>
+                <div class="social-icon-wrap">
+                    <span class="s-icon">&#128247;</span>
+                    {{ form.instagram }}
+                </div>
+                {% if form.instagram.errors %}<div class="error-msg">{{ form.instagram.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="sp-field">
+                <label for="{{ form.tiktok.id_for_label }}">TikTok</label>
+                <div class="social-icon-wrap">
+                    <span class="s-icon">&#9835;</span>
+                    {{ form.tiktok }}
+                </div>
+                {% if form.tiktok.errors %}<div class="error-msg">{{ form.tiktok.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="sp-divider"></div>
+
+        <!-- Services -->
+        <div class="sp-section-title">&#9874; Services you provide</div>
+
+        <div class="sp-col-heads">
+            <span>Service name</span>
+            <span>Rate (Rs/hr)</span>
+            <span></span>
+        </div>
+
+        <div id="service-container">
+            {% if form.instance.pk %}
+                {% for service in form.instance.services.all %}
+                <div class="service-row">
+                    <input type="text" name="service_name" value="{{ service.service_name }}" placeholder="e.g. Web development" autocomplete="off">
+                    <div class="rate-wrap">
+                        <span class="rate-prefix">Rs</span>
+                        <input type="number" name="rate" value="{{ service.rate }}" placeholder="500" min="0">
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removeRow(this)" title="Remove" aria-label="Remove">&#10005;</button>
+                </div>
+                {% empty %}
+                <div class="service-row">
+                    <input type="text" name="service_name" placeholder="e.g. Web development" autocomplete="off">
+                    <div class="rate-wrap">
+                        <span class="rate-prefix">Rs</span>
+                        <input type="number" name="rate" placeholder="500" min="0">
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removeRow(this)" title="Remove" aria-label="Remove">&#10005;</button>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="service-row">
+                    <input type="text" name="service_name" placeholder="e.g. Web development" autocomplete="off">
+                    <div class="rate-wrap">
+                        <span class="rate-prefix">Rs</span>
+                        <input type="number" name="rate" placeholder="500" min="0">
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removeRow(this)" title="Remove" aria-label="Remove">&#10005;</button>
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="button" class="btn-add-service" onclick="addService()">
+            &#43; Add another service
+        </button>
+
+        <div class="sp-footer">
+            <a href="{% url 'provider_dashboard' %}" class="btn-cancel">Cancel</a>
+            <button type="submit" class="btn-save">&#10003; Save profile</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<script>
+const latInput = document.getElementById('{{ form.latitude.id_for_label }}');
+const lngInput = document.getElementById('{{ form.longitude.id_for_label }}');
+const coordStatus = document.getElementById('coordStatus');
+const btnPickLocation = document.getElementById('btnPickLocation');
+
+function pickCurrentLocation() {
+    if (!navigator.geolocation) {
+        setStatus('error', 'Geolocation not supported by this browser.');
+        return;
+    }
+
+    btnPickLocation.disabled = true;
+    btnPickLocation.textContent = '⏳ Getting location…';
+
+    navigator.geolocation.getCurrentPosition(
+        function(pos) {
+            latInput.value = pos.coords.latitude.toFixed(6);
+            lngInput.value = pos.coords.longitude.toFixed(6);
+            btnPickLocation.disabled = false;
+            btnPickLocation.innerHTML = '&#127919; Use current location';
+            setStatus('success', '✓ Location set');
+        },
+        function(err) {
+            btnPickLocation.disabled = false;
+            btnPickLocation.innerHTML = '&#127919; Use current location';
+            const msgs = {
+                1: 'Location access denied. Please allow it in browser settings.',
+                2: 'Location unavailable. Try again.',
+                3: 'Location request timed out. Try again.',
+            };
+            setStatus('error', msgs[err.code] || 'Could not get location.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
+function setStatus(type, msg) {
+    coordStatus.className = 'coord-status ' + type;
+    coordStatus.textContent = msg;
+}
+
+function addService() {
+    const container = document.getElementById('service-container');
+    const row = document.createElement('div');
+    row.className = 'service-row';
+    row.innerHTML = `
+        <input type="text" name="service_name" placeholder="Service name" autocomplete="off">
+        <div class="rate-wrap">
+            <span class="rate-prefix">Rs</span>
+            <input type="number" name="rate" placeholder="0" min="0">
+        </div>
+        <button type="button" class="btn-remove" onclick="removeRow(this)" title="Remove" aria-label="Remove">&#10005;</button>
+    `;
+    container.appendChild(row);
+    row.querySelector('input').focus();
+}
+
+function removeRow(btn) {
+    const container = document.getElementById('service-container');
+    if (container.children.length > 1) {
+        btn.closest('.service-row').remove();
+    }
+}
+
+document.getElementById('photoInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+        alert('File is too large. Maximum size is 2 MB.');
+        this.value = '';
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = document.getElementById('avatarPreview');
+        const icon = document.getElementById('avatarIcon');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        icon.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+});
+
+// Show set badge on load if coords already saved
+window.addEventListener('DOMContentLoaded', () => {
+    if (latInput.value && lngInput.value) {
+        setStatus('success', '✓ Location set');
+    }
+});
+</script>
+
+{% endblock %}
